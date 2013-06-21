@@ -6,13 +6,16 @@ package comunicacaoprocessos;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.channels.FileChannel;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -81,7 +84,9 @@ public class Cliente {
                     System.out.println("\nVocê recebeu um arquivo de " + message.getCliente());
                     System.out.println("O arquivo é " + message.getArquivo().getName());
                 
-                    imprime(message);
+                    //imprime(message);
+                    
+                    salvar(message);
                     
                     System.out.print("1 - Sair | 2 - Enviar: ");
                 }
@@ -105,8 +110,30 @@ public class Cliente {
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();
             } catch (IOException ex) {
-                Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
+        }
+
+        private void salvar(FileMessage message) {
+            try {
+                                
+                FileInputStream fileInputStream = new FileInputStream(message.getArquivo());
+                FileOutputStream fileOutputStream = new FileOutputStream("c:\\comunicacaoprocessos\\" + message.getArquivo().getName());
+                
+                FileChannel fcInput = fileInputStream.getChannel();
+                FileChannel fcOutput = fileOutputStream.getChannel();
+                
+                long size = fcInput.size();
+                
+                fcInput.transferTo(0, size, fcOutput);
+                
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            
+            
         }
     }
     
