@@ -33,10 +33,8 @@ public class Servidor {
         try {
             serverSocket = new ServerSocket(5555);
             System.out.println("Servidor ligado!");
-
             while (true) {
                 socket = serverSocket.accept();
-
                 new Thread(new ListenerSocket(socket)).start();
             }
         } catch (IOException e) {
@@ -61,9 +59,24 @@ public class Servidor {
                     streamMap.put(message.getCliente(), outputStream);
                     if (message.getArquivo() != null) {
                         for (Map.Entry<String, ObjectOutputStream> kv : streamMap.entrySet()) {
-                            if (!message.getCliente().equals(kv.getKey())) {
+                            if (message.getTipo() == 1) {
+                                //se eh dono da mensagem salva no PC
+                                if (message.getCliente().equals(kv.getKey())) {
+                                    kv.getValue().writeObject(message);
+                                    //se nao eh o dono, verifica o que tem mais memoria pra salvar
+                                } else if (!message.getCliente().equals(kv.getKey())) {
+                                    kv.getValue().writeObject(message);
+                                }
+                            }else if(message.getTipo() == 2){
+                                // mensagem de delete enviada para todos
                                 kv.getValue().writeObject(message);
+                            }else if(message.getTipo() == 3){
+                                // mensagem de copiar apenas para dono
+                                if (message.getCliente().equals(kv.getKey())) {
+                                    kv.getValue().writeObject(message);
+                                }
                             }
+                            
                         }
                     }
                 }

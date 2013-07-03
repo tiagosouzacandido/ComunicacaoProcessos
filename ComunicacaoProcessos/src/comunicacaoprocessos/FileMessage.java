@@ -11,12 +11,15 @@ import java.io.Serializable;
  *
  * @author Tiago
  */
-public class FileMessage implements Serializable{
-    
+public class FileMessage implements Serializable {
+
     private String cliente;
     private File arquivo;
+    private int tipo;
+    private File arquivoCopiar;
 
-    public FileMessage(String cliente, File arquivo) {
+    public FileMessage(int tipo, String cliente, File arquivo) {
+        this.tipo = tipo;
         this.cliente = cliente;
         this.arquivo = arquivo;
     }
@@ -24,10 +27,9 @@ public class FileMessage implements Serializable{
     public FileMessage(String cliente) {
         this.cliente = cliente;
     }
-    
+
     public FileMessage() {
     }
-    
 
     public String getCliente() {
         return cliente;
@@ -43,6 +45,22 @@ public class FileMessage implements Serializable{
 
     public void setArquivo(File arquivo) {
         this.arquivo = arquivo;
+    }
+
+    public int getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
+    }
+
+    public File getArquivoCopiar() {
+        return arquivoCopiar;
+    }
+
+    public void setArquivoCopiar(File arquivoCopiar) {
+        this.arquivoCopiar = arquivoCopiar;
     }
     
     
